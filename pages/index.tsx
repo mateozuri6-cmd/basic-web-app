@@ -2,11 +2,32 @@ import { useState } from 'react';
 
 export default function Home() {
   const [prompt, setPrompt] = useState('');
+  const [imagenUrl, setImagenUrl] = useState('');
+  const [cargando, setCargando] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert('Prompt enviado: ' + prompt);
-    // Aquí conectaremos con la IA más tarde
+    setCargando(true);
+    setImagenUrl('');
+
+    try {
+      const respuesta = await fetch('/api/generar-imagen', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt }),
+      });
+
+      const datos = await respuesta.json();
+      if (datos.url) {
+        setImagenUrl(datos.url);
+      } else {
+        alert('Error: ' + datos.error);
+      }
+    } catch (error) {
+      alert('Hubo un error al conectar con la IA.');
+    } finally {
+      setCargando(false);
+    }
   };
 
   return (
@@ -35,10 +56,18 @@ export default function Home() {
             borderRadius: '5px',
             cursor: 'pointer'
           }}
+          disabled={cargando}
         >
-          Generar Imagen
+          {cargando ? 'Generando...' : 'Generar Imagen'}
         </button>
       </form>
+
+      {imagenUrl && (
+        <div style={{ marginTop: '2rem' }}>
+          <h3>Imagen Generada:</h3>
+          <img src={imagenUrl} alt="Imagen generada con IA" style={{ maxWidth: '100%', borderRadius: '10px' }} />
+        </div>
+      )}
     </div>
   );
 }
