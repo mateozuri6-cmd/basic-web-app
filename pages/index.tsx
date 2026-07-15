@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Image from 'next/image';
 
 export default function Home() {
   const [prompt, setPrompt] = useState('');
@@ -6,9 +7,8 @@ export default function Home() {
   const [cargando, setCargando] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault(); // <--- Esto evita que la página se recargue [citation:2]
+    e.preventDefault();
 
-    // Si no hay prompt, no hacemos nada
     if (!prompt.trim()) {
       alert('Por favor, escribe un prompt.');
       return;
@@ -74,10 +74,12 @@ export default function Home() {
       {imagenUrl && (
         <div style={{ marginTop: '2rem' }}>
           <h3>✅ Imagen Generada:</h3>
-          <img
+          <Image
             src={imagenUrl}
             alt="Imagen generada con IA"
-            style={{ maxWidth: '100%', borderRadius: '10px', border: '1px solid #ddd' }}
+            width={768}
+            height={1024}
+            style={{ maxWidth: '100%', borderRadius: '10px', height: 'auto' }}
           />
         </div>
       )}
