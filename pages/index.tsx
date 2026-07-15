@@ -6,8 +6,8 @@ export default function Home() {
 
   return (
     <div>
-      <h1>Welcome!!</h1>
-      <p>Please enter your query in the box below:</p>
+      <h1>Mi estudio IA para fotos sameso!!</h1>
+      <p>Escribe tu prompt para editar tus imágenes:</p>
       <input
         type="text"
         value={query}
