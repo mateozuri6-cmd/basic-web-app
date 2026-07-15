@@ -14,7 +14,7 @@ export default async function handler(
     return res.status(400).json({ error: 'El prompt es obligatorio' });
   }
 
-  // Por ahora, responderemos con un mensaje de prueba
+  // Respuesta de prueba con imagen placeholder
   return res.status(200).json({ 
     url: 'https://via.placeholder.com/768x1024.png?text=Imagen+generada+con+IA' 
   });
