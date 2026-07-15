@@ -6,7 +6,14 @@ export default function Home() {
   const [cargando, setCargando] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault(); // <--- Esto evita que la página se recargue [citation:2]
+
+    // Si no hay prompt, no hacemos nada
+    if (!prompt.trim()) {
+      alert('Por favor, escribe un prompt.');
+      return;
+    }
+
     setCargando(true);
     setImagenUrl('');
 
@@ -18,13 +25,14 @@ export default function Home() {
       });
 
       const datos = await respuesta.json();
+
       if (datos.url) {
         setImagenUrl(datos.url);
       } else {
-        alert('Error: ' + datos.error);
+        alert('Error: ' + (datos.error || 'No se pudo generar la imagen.'));
       }
     } catch (error) {
-      alert('Hubo un error al conectar con la IA.');
+      alert('Hubo un error al conectar con el servidor. Revisa tu conexión.');
     } finally {
       setCargando(false);
     }
@@ -34,7 +42,7 @@ export default function Home() {
     <div style={{ padding: '2rem', maxWidth: '600px', margin: '0 auto' }}>
       <h1>👗 Mi Editor de Fotos con IA</h1>
       <p>Escribe tu prompt para editar la imagen:</p>
-      
+
       <form onSubmit={handleSubmit}>
         <textarea
           rows={4}
@@ -44,28 +52,33 @@ export default function Home() {
           style={{ width: '100%', padding: '0.5rem', fontSize: '1rem' }}
         />
         <br />
-        <button 
-          type="submit" 
-          style={{ 
-            marginTop: '1rem', 
-            padding: '0.7rem 2rem', 
+        <button
+          type="submit"
+          style={{
+            marginTop: '1rem',
+            padding: '0.7rem 2rem',
             fontSize: '1rem',
             backgroundColor: '#0070f3',
             color: 'white',
             border: 'none',
             borderRadius: '5px',
-            cursor: 'pointer'
+            cursor: cargando ? 'not-allowed' : 'pointer',
+            opacity: cargando ? 0.6 : 1,
           }}
           disabled={cargando}
         >
-          {cargando ? 'Generando...' : 'Generar Imagen'}
+          {cargando ? '🔄 Generando...' : '🚀 Generar Imagen'}
         </button>
       </form>
 
       {imagenUrl && (
         <div style={{ marginTop: '2rem' }}>
-          <h3>Imagen Generada:</h3>
-          <img src={imagenUrl} alt="Imagen generada con IA" style={{ maxWidth: '100%', borderRadius: '10px' }} />
+          <h3>✅ Imagen Generada:</h3>
+          <img
+            src={imagenUrl}
+            alt="Imagen generada con IA"
+            style={{ maxWidth: '100%', borderRadius: '10px', border: '1px solid #ddd' }}
+          />
         </div>
       )}
     </div>
