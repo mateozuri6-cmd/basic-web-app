@@ -28,28 +28,25 @@ export default async function handler(
       body: JSON.stringify({
         prompt: prompt,
         image_size: 'square_hd',
-        num_inference_steps: 28,
-        guidance_scale: 3.5,
+        num_inference_steps: 20,
+        guidance_scale: 3,
       }),
     });
 
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.detail || 'Error al generar la imagen');
+      return res.status(500).json({ error: data.detail || 'Error al generar la imagen' });
     }
 
     const imageUrl = data.images?.[0]?.url;
 
     if (!imageUrl) {
-      throw new Error('No se recibió una URL de imagen');
+      return res.status(500).json({ error: 'No se recibió una URL de imagen' });
     }
 
     return res.status(200).json({ url: imageUrl });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      error: error.message || 'Error interno del servidor',
-    });
+    return res.status(500).json({ error: 'Error interno del servidor' });
   }
 }

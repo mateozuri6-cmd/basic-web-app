@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import Image from 'next/image';
 
 export default function Home() {
   const [prompt, setPrompt] = useState('');
@@ -32,7 +31,7 @@ export default function Home() {
         alert('Error: ' + (datos.error || 'No se pudo generar la imagen.'));
       }
     } catch (error) {
-      alert('Hubo un error al conectar con el servidor. Revisa tu conexión.');
+      alert('Hubo un error al conectar con el servidor.');
     } finally {
       setCargando(false);
     }
@@ -74,12 +73,10 @@ export default function Home() {
       {imagenUrl && (
         <div style={{ marginTop: '2rem' }}>
           <h3>✅ Imagen Generada:</h3>
-          <Image
+          <img
             src={imagenUrl}
             alt="Imagen generada con IA"
-            width={768}
-            height={1024}
-            style={{ maxWidth: '100%', borderRadius: '10px', height: 'auto' }}
+            style={{ maxWidth: '100%', borderRadius: '10px' }}
           />
         </div>
       )}
